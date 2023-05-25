@@ -46,7 +46,8 @@ componentDidMount() {
             lat: mapa.getCenter().lat.toFixed(4),
             zoom: mapa.getZoom().toFixed(2)
             });
-            marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)])
+            marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)]);
+            this.loadLegends()
         });
     
         this.mapa = mapa;
@@ -98,8 +99,9 @@ render() {
     <div>
         <Navbar />
         <div>
-      <input type="text" value={inputValue} onChange={this.handleInputChange} />
-      <button onClick={this.loadLegends}>Szukaj</button>
+          <label id="distance">Zakres odległości legend w kilometrach od znacznika</label>
+      <input name="distance" type="text" value={inputValue} onChange={this.handleInputChange} />
+      {/* <button onClick={this.loadLegends}>Szukaj</button> */}
     </div>
         <div className="sidebar">
         

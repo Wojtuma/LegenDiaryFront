@@ -15,12 +15,12 @@ const AddLegend = () => {
     setTitle(e.target.value);
   };
 
-  const handleMapClick = (e, marker) => {
-    const { lng, lat } = e.lngLat;
-    setLongitude(lng);
-    setLatitude(lat);
-    marker.setLngLat([lng, lat]);
-  };
+  // const handleMapClick = (e, marker) => {
+  //   const { lng, lat } = e.lngLat;
+  //   setLongitude(lng);
+  //   setLatitude(lat);
+  //   marker.setLngLat([lng, lat]);
+  // };
 
   const handleMapMove = (map, marker) => {
     const lng = map.getCenter().lng.toFixed(4);
@@ -82,9 +82,9 @@ const AddLegend = () => {
       handleMapMove(map, marker);
     });
 
-    map.on('click', function (event) {
-      handleMapClick(event, marker);
-    });
+    // map.on('click', function (event) {
+    //   handleMapClick(event, marker);
+    // });
 
     return () => map.remove();
   }, []);
