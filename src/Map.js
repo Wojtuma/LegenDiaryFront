@@ -10,7 +10,7 @@ constructor(props) {
     this.state = {
         lng: 19.52,
         lat: 52.16,
-        zoom: 6,
+        zoom: 6
    
     };
     
@@ -60,7 +60,7 @@ componentDidMount() {
             this.setState({
             lng: mapa.getCenter().lng.toFixed(4),
             lat: mapa.getCenter().lat.toFixed(4),
-            zoom: mapa.getZoom().toFixed(2)
+            zoom: mapa.getZoom().toFixed(2),
             });
             marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)])
         });
@@ -69,6 +69,7 @@ componentDidMount() {
 
     
 }
+
 // componentDidUpdate(prevProps, prevState) {
 //     // Sprawdzamy czy zmieniły się współrzędne
 //     if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng) {
@@ -78,7 +79,7 @@ componentDidMount() {
 //   }
 
 render() {
-    console.log(process.env.REACT_APP_MAP_API_KEY)
+
     return (
     <div>
         <div className="sidebar">
@@ -87,7 +88,7 @@ render() {
         <div >
             <div ref={this.mapContainer} className="map-container" />
         </div>
-        {/* <Weather latitude={this.state.lat} longitude={this.state.lng} /> */}
+        <Weather latitude={this.state.lat} longitude={this.state.lng} />
 
     </div>
     );
