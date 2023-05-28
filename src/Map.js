@@ -48,15 +48,36 @@ componentDidMount() {
     mapa.addControl(new mapboxgl.NavigationControl());
     this.loadLegends(mapa);
     
-    
+    mapa.on('load', function() {
+        mapa.addSource('countries', {
+          type: 'vector',
+          url: 'mapbox://mapbox.country-boundaries-v1'
+        });
+    mapa.addLayer({
+        'id': 'country-boundaries',
+        'type': 'fill',
+        'source': 'countries',
+        'source-layer': 'country_boundaries',
+        'paint': {
+          'fill-color': '#cccccc',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'active'], false],
+            1,
+            0.2
+          ]
+        },
+        'filter': ['!=', 'iso_3166_1_alpha_3', 'POL']
+      });
+    });
     
     const marker = new mapboxgl.Marker({
         color: "red",
         draggable: true
         }).setLngLat([this.state.lng,this.state.lat])
         .addTo(mapa)
-
-        mapa.on('move', () => {
+    
+    mapa.on('move', () => {
             this.setState({
             lng: mapa.getCenter().lng.toFixed(4),
             lat: mapa.getCenter().lat.toFixed(4),
