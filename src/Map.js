@@ -1,6 +1,7 @@
 import React from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import Weather from './Weather';
+import MapboxGeocoder from './MapGeocoder';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAP_API_KEY;
 
@@ -24,6 +25,23 @@ async loadLegends(mapa){
 this.addMarkers(data,mapa))
 }
 
+async loadRadio(mapa){
+    fetch('https://at1.api.radio-browser.info/json/stations/search?limit=1000&countrycode=PL&hidebroken=true&order=votes&reverse=true')
+    .then(response => response.json())
+    .then(data => this.addMarkersRadio(data,mapa)
+    )
+}
+addMarkersRadio(data,mapa){
+    
+    
+    data.map(radio=>{new mapboxgl.Marker({
+        color: "blue",
+        draggable: false
+        }).setLngLat([radio.geo_long, radio.geo_lat])
+        .setPopup(new mapboxgl.Popup().setHTML(`<h3>${radio.name}</h3>`))
+        .addTo(mapa);
+    })
+}
 addMarkers(data,mapa){
     
     
@@ -47,6 +65,7 @@ componentDidMount() {
     });
     mapa.addControl(new mapboxgl.NavigationControl());
     this.loadLegends(mapa);
+    this.loadRadio(mapa);
     
     mapa.on('load', function() {
         mapa.addSource('countries', {
@@ -73,7 +92,7 @@ componentDidMount() {
     
     const marker = new mapboxgl.Marker({
         color: "red",
-        draggable: true
+        draggable: false
         }).setLngLat([this.state.lng,this.state.lat])
         .addTo(mapa)
     
@@ -91,25 +110,18 @@ componentDidMount() {
     
 }
 
-// componentDidUpdate(prevProps, prevState) {
-//     // Sprawdzamy czy zmieniły się współrzędne
-//     if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng) {
-//       // Wywołujemy funkcję do wczytywania danych pogodowych po zmianie współrzędnych
-//       this.loadWeatherData();
-//     }
-//   }
 
 render() {
 
     return (
     <div>
         <div className="sidebar">
-        Longitude: {this.state.lng} | Latitude: {this.state.lat}
+        Longitude: {this.state.lng} | Latitude: {this.state.lat}  |<Weather latitude={this.state.lat} longitude={this.state.lng} /> <MapboxGeocoder longitude={this.state.lng} latitude={this.state.lat} />
         </div>
         <div >
             <div ref={this.mapContainer} className="map-container" />
         </div>
-        <Weather latitude={this.state.lat} longitude={this.state.lng} />
+        
 
     </div>
     );

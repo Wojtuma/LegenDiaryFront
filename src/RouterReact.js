@@ -6,6 +6,7 @@ import AddLegend from './AddLegend'
 import Navbar from './Navbar'
 import MapFilter from './MapFilter'
 import MapFilterWord from './MapFilterWord'
+import RadioBrowserAPI from './RadioAPI'
 
  
 const RouterReact = () =>(
@@ -16,6 +17,7 @@ const RouterReact = () =>(
             <Route path='/search' element={<MapFilter />}/>
             <Route path='/searchword' element={<MapFilterWord />}/>
             <Route path='/add' element={<AddLegend />}/>
+            <Route path='radio' element={<RadioBrowserAPI />}/>
             <Route path='*' element={<NotFound />}/>
         </Routes>
     </Router>

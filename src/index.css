@@ -22,8 +22,9 @@ code {
   font-family: monospace;
   z-index: 1;
   position: absolute;
-  top: 95%;
-  left: 30%;
-  margin: 12px;
+  top: 96%;
+  /* left: 30%;
+  margin: 12px; */
   border-radius: 4px;
+  width: 100%;
   }
