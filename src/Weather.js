@@ -46,7 +46,7 @@ render() {
     const weather = this.state.data;
     if (weather && weather.current_weather) {
     return ( <div>
-        <p>{this.state.data.current_weather.temperature}</p>
+        Temperature : {this.state.data.current_weather.temperature} ℃
             </div>
     )}
 }

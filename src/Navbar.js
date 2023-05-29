@@ -9,6 +9,7 @@ const Navbar = () => {
         <li><a href="/search">Szukaj (Kordynaty)|||</a></li>
         <li><a href="/searchword">Szukaj (Słowo kluczowe)|||</a></li>
         <li><a href="/add">Dodaj Legende|||</a></li>
+        <li><a href="/radio">Radio|||</a></li>
         <li><a href="/login">Legend-in|||</a></li>
         <li><a href="/register">Legend-ister|||</a></li>
       </ul>
