@@ -1,7 +1,8 @@
 import React from 'react';
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from 'mapbox-gl'; 
 import Weather from './Weather';
 import MapboxGeocoder from './MapGeocoder';
+import AudioPlayer from 'react-audio-player';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAP_API_KEY;
 
@@ -11,8 +12,13 @@ constructor(props) {
     this.state = {
         lng: 19.52,
         lat: 52.16,
-        zoom: 6
-   
+        zoom: 6,
+        markers:[],
+        radioStations:[],
+        showPlayer:false,
+        urlRadio:null,
+        lngLegend:null,
+        latLegend:null,
     };
     
 
@@ -25,37 +31,79 @@ async loadLegends(mapa){
 this.addMarkers(data,mapa))
 }
 
-async loadRadio(mapa){
-    fetch('https://at1.api.radio-browser.info/json/stations/search?limit=1000&countrycode=PL&hidebroken=true&order=votes&reverse=true')
-    .then(response => response.json())
-    .then(data => this.addMarkersRadio(data,mapa)
-    )
+async loadRadio(){
+    try {
+        fetch('https://at1.api.radio-browser.info/json/stations/search?limit=1000&countrycode=PL&hidebroken=true&order=votes&reverse=true')
+        .then(response => response.json())
+        .then(data=>{this.setState({radioStations:data})
+        })}
+    catch (error) {
+        console.error('Error occurred while loading radio stations:', error);
+        }
+        
+
 }
-addMarkersRadio(data,mapa){
-    
-    
-    data.map(radio=>{new mapboxgl.Marker({
-        color: "blue",
-        draggable: false
-        }).setLngLat([radio.geo_long, radio.geo_lat])
-        .setPopup(new mapboxgl.Popup().setHTML(`<h3>${radio.name}</h3>`))
-        .addTo(mapa);
-    })
-}
-addMarkers(data,mapa){
-    
-    
-    data.map(legend=>{new mapboxgl.Marker({
+
+loadPlayer(url){
+    this.setState({urlRadio:url})
+}   
+
+loadRadioStations(mapa) {
+    if (this.state.markers.length === 0) {
+      const newMarkers = this.state.radioStations.map((radio) => {
+        if (radio.geo_lat !== null && this.isPlaceInRange(this.state.latLegend, this.state.lngLegend, radio.geo_lat, radio.geo_long, 20)) {
+          var customRadioIcon = document.createElement('div');
+          customRadioIcon.className = 'custom-marker';
+          const newMarker = new mapboxgl.Marker({
+            element: customRadioIcon,
+            draggable: false,
+          })
+            .setLngLat([radio.geo_long, radio.geo_lat])
+            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${radio.name}</h3>`))
+            .addTo(mapa);
+          newMarker.getElement().addEventListener('click', () => {
+            this.setState({ showPlayer: true });
+            this.loadPlayer(radio.url);
+          });
+          return newMarker;
+        } else {
+          return null;
+        }
+      });
+  
+      this.setState({ markers: newMarkers });
+    } else {
+      this.state.markers.forEach((marker) => {
+        if (marker != null) {
+          marker.remove();
+        }
+      });
+  
+      this.setState({ markers: [] });
+    }
+  }
+addMarkers(data, mapa) {
+    data.map((legend) => { const pointer = new mapboxgl.Marker({
         color: "darkgreen",
-        draggable: false
-        }).setLngLat([legend.longitude, legend.latitude])
+        draggable: false,
+      })
+        .setLngLat([legend.longitude, legend.latitude])
         .setPopup(new mapboxgl.Popup().setHTML(`<h3>${legend.name}</h3>`))
         .addTo(mapa);
-    })
-}
-componentDidMount() {
-    
+        pointer.getElement().addEventListener('click', () => {
+            this.setState({latLegend:legend.latitude});
+            this.setState({lngLegend:legend.longitude});
+            this.setState({urlRadio:null});
+            this.setState({showPlayer:false});
+            this.loadRadioStations(mapa);
+            });
+            return null;
+    });
+   
+  }
 
+componentDidMount() {
+    this.loadRadio();
     const { lng, lat, zoom } = this.state;
     const mapa = new mapboxgl.Map({
     container: this.mapContainer.current,
@@ -65,7 +113,6 @@ componentDidMount() {
     });
     mapa.addControl(new mapboxgl.NavigationControl());
     this.loadLegends(mapa);
-    this.loadRadio(mapa);
     
     mapa.on('load', function() {
         mapa.addSource('countries', {
@@ -90,8 +137,10 @@ componentDidMount() {
       });
     });
     
+
     const marker = new mapboxgl.Marker({
-        color: "red",
+        
+        color:'red',
         draggable: false
         }).setLngLat([this.state.lng,this.state.lat])
         .addTo(mapa)
@@ -105,11 +154,32 @@ componentDidMount() {
             marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)])
         });
     
-
-
-    
 }
-
+isPlaceInRange(latitudePointCentral, longitudePointCentral, latitudeAnotherPoint, longitudeAnotherPoint, radiusInKilometers) {
+    const Distance = {
+      EARTH_RADIUS: 6371 // Przyjęta wartość promienia Ziemi w kilometrach
+    };
+  
+  
+    const latCentral = this.toRadians(latitudePointCentral);
+    const latEdge = this.toRadians(latitudeAnotherPoint);
+  
+    const lngCentral = this.toRadians(longitudePointCentral);
+    const lngEdge = this.toRadians(longitudeAnotherPoint);
+  
+    const deltalng = lngEdge - lngCentral;
+    const deltalat = latEdge - latCentral;
+  
+    const a = Math.sin(deltalat / 2) * Math.sin(deltalat / 2) + Math.cos(latCentral) * Math.cos(latEdge) * Math.sin(deltalng / 2) * Math.sin(deltalng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = Distance.EARTH_RADIUS * c;
+  
+    return distance <= radiusInKilometers;
+  }
+  
+  toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
 
 render() {
 
@@ -118,14 +188,16 @@ render() {
         <div className="sidebar">
         Longitude: {this.state.lng} | Latitude: {this.state.lat}  |<Weather latitude={this.state.lat} longitude={this.state.lng} /> <MapboxGeocoder longitude={this.state.lng} latitude={this.state.lat} />
         </div>
-        <div >
+        <div>
             <div ref={this.mapContainer} className="map-container" />
         </div>
         
-
+        {this.state.showPlayer && (<div className="player-container" ref={this.playerContainer}>
+              <AudioPlayer src={this.state.urlRadio} controls/>
+        </div>)}
     </div>
     );
-}
-}
+        }
+    }
 
 export default Map

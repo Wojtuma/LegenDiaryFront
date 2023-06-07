@@ -7,24 +7,22 @@ constructor(props) {
         latitude : null,
         longitude : null,
         data : {},
-        
-    }
-
+        }
 }
 
 async loadWeather()
 {
     try{
-    const encodedLatitude = encodeURIComponent(this.props.latitude);
-    const encodedLongitude = encodeURIComponent(this.props.longitude);
-            
-    
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${encodedLatitude}&longitude=${encodedLongitude}&current_weather=true`)
-    .then(response => response.json())
-    .then(data => this.setState({data : data}))
-} catch (error) {
-                console.error('Error while loading weather data:', error);
-            }
+        const encodedLatitude = encodeURIComponent(this.props.latitude);
+        const encodedLongitude = encodeURIComponent(this.props.longitude);
+ 
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${encodedLatitude}&longitude=${encodedLongitude}&current_weather=true`)
+        .then(response => response.json())
+        .then(data => this.setState({data : data}))
+    } 
+    catch (error) {
+        console.error('Error while loading weather data:', error);
+    }
    
 }
 componentDidMount()
@@ -32,12 +30,9 @@ componentDidMount()
     this.loadWeather()
 }
 componentDidUpdate(prevProps) {
-    if (prevProps.longitude !== this.props.longitude ||prevProps.latitude !== this.props.latitude ) {
-    {
-        this.loadWeather();
-    }    
-       
-        
+    if (prevProps.longitude !== this.props.longitude 
+        ||prevProps.latitude !== this.props.latitude ) {
+            this.loadWeather();   
     }
 }
 

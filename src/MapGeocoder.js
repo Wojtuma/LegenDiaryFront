@@ -13,7 +13,7 @@ class MapboxGeocoder extends Component {
     const accessToken = process.env.REACT_APP_MAP_API_KEY;;
     const geocodingService = mapboxSdk({ accessToken });
     const response = await geocodingService.reverseGeocode({
-      query: [longitude, latitude].map(Number), // Convert values to numbers
+      query: [longitude, latitude].map(Number), 
     }).send();
 
     const features = response.body.features;
