@@ -1,5 +1,4 @@
-import React,{Component} from 'react'
-import { BrowserRouter as Router,Routes,Route} from 'react-router-dom'
+import React from 'react'
 const NotFound = () =>(
 <div><h2>Brak strony</h2></div>
 )

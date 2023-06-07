@@ -1,6 +1,5 @@
 import React from 'react';
-import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import Weather from './Weather';
+import mapboxgl from 'mapbox-gl';
 import Navbar from './Navbar';
 mapboxgl.accessToken = process.env.REACT_APP_MAP_API_KEY;
 class Map extends React.PureComponent {
@@ -14,8 +13,7 @@ constructor(props) {
         markers : []
    
     };
-    
-
+ 
     this.mapContainer = React.createRef();
 }
 
@@ -30,10 +28,7 @@ componentDidMount() {
     zoom: zoom
     });
     mapa.addControl(new mapboxgl.NavigationControl());
-    // this.loadLegends(mapa);
-    
-    
-    
+
     const marker = new mapboxgl.Marker({
         color: "red",
         draggable: false
@@ -60,7 +55,7 @@ loadLegends = () => {
     fetch(`http://localhost:8081/placesContainWord?word=${inputValue}`)
       .then((response) => response.json())
       .then((data) => {
-        // Usunięcie poprzednich znaczników
+    
         this.state.markers.forEach((marker) => {
           marker.remove();
         });
@@ -85,13 +80,7 @@ loadLegends = () => {
 handleInputChange = (event) => {
     this.setState({ inputValue: event.target.value });
   };
-// componentDidUpdate(prevProps, prevState) {
-//     // Sprawdzamy czy zmieniły się współrzędne
-//     if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng) {
-//       // Wywołujemy funkcję do wczytywania danych pogodowych po zmianie współrzędnych
-//       this.loadWeatherData();
-//     }
-//   }
+
 
 render() {
     const {  inputValue } = this.state;
@@ -110,8 +99,6 @@ render() {
         <div >
             <div ref={this.mapContainer} className="map-container" />
         </div>
-        {/* <Weather latitude={this.state.lat} longitude={this.state.lng} /> */}
-
     </div>
     );
 }
