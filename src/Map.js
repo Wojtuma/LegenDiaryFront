@@ -19,6 +19,11 @@ constructor(props) {
         urlRadio:null,
         lngLegend:null,
         latLegend:null,
+        title:'',
+        description:''
+
+        
+
     };
     
 
@@ -65,6 +70,7 @@ loadRadioStations(mapa) {
             this.setState({ showPlayer: true });
             this.loadPlayer(radio.url);
           });
+          
           return newMarker;
         } else {
           return null;
@@ -90,14 +96,26 @@ addMarkers(data, mapa) {
         .setLngLat([legend.longitude, legend.latitude])
         .setPopup(new mapboxgl.Popup().setHTML(`<h3>${legend.name}</h3>`))
         .addTo(mapa);
+        
+        
         pointer.getElement().addEventListener('click', () => {
             this.setState({latLegend:legend.latitude});
             this.setState({lngLegend:legend.longitude});
             this.setState({urlRadio:null});
+            this.setState({title:legend.name});
+            this.setState({description:legend.description});
             this.setState({showPlayer:false});
             this.loadRadioStations(mapa);
             });
+            pointer.getElement().addEventListener('click',()=>{
+              this.props.toggle(this.state.title,this.state.description);
+            
+        
+              
+              
+            })
             return null;
+            
     });
    
   }
