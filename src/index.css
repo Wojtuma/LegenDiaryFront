@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
@@ -12,18 +13,18 @@ code {
     monospace;
 }
 .map-container {
-  height: 600px;
-  position: relative;
+  width: 100vw;
+  height: 100vh;
   }
    
-.sidebar {
+.footer {
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
   padding: 6px 12px;
   font-family: monospace;
   z-index: 1;
   position: absolute;
-  top: 96%;
+  top: 92%;
   /* left: 30%;
   margin: 12px; */
   border-radius: 4px;
@@ -46,4 +47,8 @@ code {
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .mapbox-popup-content-wrapper{
+      background-color: black;
     }

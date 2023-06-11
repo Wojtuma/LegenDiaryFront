@@ -20,15 +20,14 @@ drawerToggleClickHandler = (title,description) => {
    })
  }
 
-
-  render(){
-     
-     return(
-        <div> 
-          <Navbar/>         
-          <Sidebar show={this.state.drawerOpen} title={this.state.title} description={this.state.description}/>
-          <Map toggle={this.drawerToggleClickHandler}  />
-        </div>
-     )
-   }
+render(){
+    
+    return(
+      <div>
+        <Navbar/>         
+        <Sidebar show={this.state.drawerOpen} title={this.state.title} description={this.state.description} toggle={this.drawerToggleClickHandler}/>
+        <Map toggle={this.drawerToggleClickHandler}  />
+      </div>
+    )
+}
 }

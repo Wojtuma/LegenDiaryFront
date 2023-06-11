@@ -21,9 +21,6 @@ constructor(props) {
         latLegend:null,
         title:'',
         description:''
-
-        
-
     };
     
 
@@ -45,8 +42,6 @@ async loadRadio(){
     catch (error) {
         console.error('Error occurred while loading radio stations:', error);
         }
-        
-
 }
 
 loadPlayer(url){
@@ -95,8 +90,7 @@ addMarkers(data, mapa) {
       })
         .setLngLat([legend.longitude, legend.latitude])
         .setPopup(new mapboxgl.Popup().setHTML(`<h3>${legend.name}</h3>`))
-        .addTo(mapa);
-        
+        .addTo(mapa);        
         
         pointer.getElement().addEventListener('click', () => {
             this.setState({latLegend:legend.latitude});
@@ -106,18 +100,16 @@ addMarkers(data, mapa) {
             this.setState({description:legend.description});
             this.setState({showPlayer:false});
             this.loadRadioStations(mapa);
+            mapa.flyTo({
+              center: [legend.longitude,legend.latitude],
+              zoom: 12
+            });
             });
             pointer.getElement().addEventListener('click',()=>{
               this.props.toggle(this.state.title,this.state.description);
-            
-        
-              
-              
             })
-            return null;
-            
-    });
-   
+            return null;            
+    });   
   }
 
 componentDidMount() {
@@ -165,9 +157,9 @@ componentDidMount() {
     
     mapa.on('move', () => {
             this.setState({
-            lng: mapa.getCenter().lng.toFixed(4),
-            lat: mapa.getCenter().lat.toFixed(4),
-            zoom: mapa.getZoom().toFixed(2),
+              lng: mapa.getCenter().lng.toFixed(4),
+              lat: mapa.getCenter().lat.toFixed(4),
+              zoom: mapa.getZoom().toFixed(2),
             });
             marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)])
         });
@@ -203,7 +195,7 @@ render() {
 
     return (
     <div>
-        <div className="sidebar">
+        <div className="footer">
         Longitude: {this.state.lng} | Latitude: {this.state.lat}  |<Weather latitude={this.state.lat} longitude={this.state.lng} /> <MapboxGeocoder longitude={this.state.lng} latitude={this.state.lat} />
         </div>
         <div>
