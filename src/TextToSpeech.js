@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import './TextToSpeech.css'
 
 const TextToSpeech = ({ text }) => {
   const [isPaused, setIsPaused] = useState(true);
@@ -47,10 +46,10 @@ const TextToSpeech = ({ text }) => {
 
   return (
     <div className="TextToSpeech">
-      <button onClick={handleToggle}>
-        {isPaused ? "Play" : "Pause"}
+      <button onClick={handleToggle} id="ttsPlayPauseBtn" className={isPaused ? "ttsPlayPauseBtn-Paused" : "ttsPlayPauseBtn-Playing" }>
+        {/* {isPaused ? "Play" : "Pause"} */}
       </button>
-      <button onClick={handleStop}>Stop</button>
+      <button onClick={handleStop} id="ttsStopBtn" className="ttsStopBtn"></button>
     </div>
   );
 };

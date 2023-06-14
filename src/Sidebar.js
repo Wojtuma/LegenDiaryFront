@@ -4,13 +4,8 @@ import TextToSpeech from './TextToSpeech';
 export default class SlideDrawer extends React.Component {
    constructor(props) {
       super(props)
-      this.handleSidebarClose = this.handleSidebarClose.bind(this);
       this.state = {
       };
-   }
-
-   handleSidebarClose() {
-      this.props.toggle("","");
    }
 
    render() {
@@ -21,9 +16,8 @@ export default class SlideDrawer extends React.Component {
    
        return(
    
-          <div className={drawerClasses}>
-          
-          <button className='sidebarCloseBtn' onClick={this.handleSidebarClose}>x</button>
+          <div className={drawerClasses}>          
+            <button className='sidebarCloseBtn' onClick={this.props.drawerClose}></button>
             <div className='title'>{this.props.title}</div>
             <div className='description'>{this.props.description}</div>
             <div className='TextToSpeech'>
