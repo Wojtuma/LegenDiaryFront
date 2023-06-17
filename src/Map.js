@@ -11,6 +11,7 @@ class Map extends React.PureComponent {
 constructor(props) {
     super(props);
     this.state = {
+        mapa: null, 
         lng: 19.8056,
         lat: 51.7470,
         zoom: 6,
@@ -26,6 +27,7 @@ constructor(props) {
     };   
 
     this.mapContainer = React.createRef();
+    this.flyToMarker = this.flyToMarker.bind(this);
 }
 
 async loadLegends(mapa){
@@ -147,6 +149,9 @@ componentDidMount() {
     center: [lng, lat],
     zoom: zoom
   });
+  this.setState({mapa: mapa});
+  console.log(mapa)
+  
   mapa.addControl(new mapboxgl.NavigationControl());
   this.loadLegends(mapa);
   
@@ -195,20 +200,6 @@ componentDidMount() {
           marker.setLngLat([mapa.getCenter().lng.toFixed(4),mapa.getCenter().lat.toFixed(4)])
       });
 
-  const resultItem = document.getElementsByClassName("resultList")[0];
-  console.log("results",resultItem);
-  /* zoomOutBtn.addEventListener("click", () => {
-    mapa.flyTo({
-      center: [19.8056, 51.7470],
-      zoom: 6
-    });
-    this.props.drawerClose();
-    zoomOutBtn.style.visibility = 'hidden';
-    const popup = document.getElementsByClassName('mapboxgl-popup');
-    if ( popup.length ) {
-        popup[0].remove();
-    }
-  }) */
 }
 
 isPlaceInRange(latitudePointCentral, longitudePointCentral, latitudeAnotherPoint, longitudeAnotherPoint, radiusInKilometers) {
@@ -236,12 +227,36 @@ toRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
 
-/* flyToMarker(mapa, long, lat) {
-   mapa.flyTo({
-      center: [long, lat],
-      zoom: 12
-    });
-}; */
+flyToMarker = (item) => {
+  const mapa = this.state.mapa;
+
+  var flying = false;
+  mapa.on('flystart', function(){
+    flying = true;
+  });
+  mapa.on('flyend', function(){
+      flying = false;
+  });
+  
+  mapa.flyTo({
+    center: [item.longitude,item.latitude],
+    zoom: 12,
+    duration: 800
+  });
+  mapa.fire('flystart');
+
+  mapa.on('moveend', function(e){
+    if(flying){
+      /* var tooltip = new mapboxgl.Popup()
+      .setLngLat(mapa.getCenter())
+      .setHTML('<h1>Hello World!</h1>')
+      .addTo(mapa); */
+      let coords = mapa.getCenter();/* [this.state.lngLegend,this.state.latLegend]; */
+      mapa.fire('click', { latLng: coords, point: mapa.project(coords), originalEvent: {} })
+      mapa.fire('flyend'); 
+    }
+  });
+};
 
 render() {    
 
@@ -254,7 +269,7 @@ render() {
             <div ref={this.mapContainer} className="map-container"></div>
             <button className='zoomOutBtn' id="zoomOutBtn"  style={{ visibility: this.state.zoom > 6? 'visible': 'hidden'}} >Zoom Out</button>
             
-            <MapSearchByKeyword legends={this.state.legends} />
+            <MapSearchByKeyword legends={this.state.legends} flyToMarker={this.flyToMarker}/>
         </div>
         
         {this.state.showPlayer && (<div className="player-container" ref={this.playerContainer}>

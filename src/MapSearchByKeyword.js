@@ -1,58 +1,83 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-function MyComponent(props) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredResults, setFilteredResults] = useState([]);
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchQuery: '',
+      filteredResults: []
+    };
+  }
 
-  const objectArray = props.legends;
-
-  function similarWord(word) {
-    // To be implemented
+  similarWord(word) {
+    // To be implemented, maybe ;P
     return word;
   }
 
-  function handleSearchInputChange(event) {
+  handleSearchInputChange = (event) => {
     const query = event.target.value;
-    setSearchQuery(query);
+    this.setState({ searchQuery: query });
 
-    const filtered = objectArray.filter(item => {
-      const itemValue1 = item.name.toLowerCase();
-      const itemValue2 = item.description.toLowerCase();
+    const filtered = this.props.legends.filter(item => {
+      const itemName = item.name.toLowerCase();
+      const itemDesc = item.description.toLowerCase();
       const searchTerm = query.toLowerCase();
-      return itemValue1.includes(searchTerm) || itemValue2.includes(searchTerm) || itemValue1.includes(similarWord(searchTerm)) || itemValue2.includes(similarWord(searchTerm));
+      return (
+        itemName.includes(searchTerm) ||
+        itemDesc.includes(searchTerm) ||
+        itemName.includes(this.similarWord(searchTerm)) ||
+        itemDesc.includes(this.similarWord(searchTerm))
+      );
     });
 
-    setFilteredResults(filtered);
-  }
+    this.setState({ filteredResults: filtered });
+  };
 
-  function handleClick(item) {
-    /* props.flyToMarker(item.long, item.lat); */
-    /* console.log(item); */
-  }
+  handleClick(item) {
+    this.props.flyToMarker(item);
+    console.log(item);
+  };
 
-  return (
-    <div className='searchDiv'>
-    <table><th>
-      <input
-        className='searchBar'
-        type="search"
-        value={searchQuery}
-        onChange={handleSearchInputChange}
-        placeholder="Search..."
-      /></th>
-      <th>
-      {/* <button className='clearSearchBtn' ></button> */}</th></table>
-      {searchQuery !== '' && (
-      <ul className='resultList'>
-        {filteredResults.map(item => (
-          <li className="resultItem" id={item.id} key={item.id} onClick={() => handleClick(item)}>
-            {item.name}
-          </li>
-        ))}
-      </ul>)}
-      
-    </div>
-  );
+  render() {
+    const { searchQuery, filteredResults } = this.state;
+
+    return (
+      <div className='searchDiv'>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <input
+                  className='searchBar'
+                  type="search"
+                  value={searchQuery}
+                  onChange={this.handleSearchInputChange}
+                  placeholder="Search in LegenDiary..."
+                />
+              </th>
+              <th>
+                {/* <button className='clearSearchBtn' ></button> */}
+              </th>
+            </tr>
+          </thead>
+        </table>
+        {searchQuery !== '' && (
+          <ul className='resultList'>
+            {filteredResults.map(item => (
+              <li
+                className="resultItem"
+                id={item.id}
+                key={item.id}
+                onClick={() => this.handleClick(item)}
+              >
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
 }
 
 export default MyComponent;
