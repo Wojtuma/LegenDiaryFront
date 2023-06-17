@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router,Routes,Route} from 'react-router-dom'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-import App from './App';
 import RouterReact from './RouterReact';
  
 ReactDOM.render(

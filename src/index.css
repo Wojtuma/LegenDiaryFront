@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
@@ -12,18 +13,18 @@ code {
     monospace;
 }
 .map-container {
-  height: 600px;
-  position: relative;
+  width: 100vw;
+  height: 100vh;
   }
    
-.sidebar {
+.footer {
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
   padding: 6px 12px;
   font-family: monospace;
   z-index: 1;
   position: absolute;
-  top: 96%;
+  top: 92%;
   /* left: 30%;
   margin: 12px; */
   border-radius: 4px;
@@ -47,3 +48,84 @@ code {
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+.mapboxgl-popup-content{
+  height: 30px;
+  background-color: #1e761f;
+  color: #fff;
+  border-color: #1e761f;
+  border-width: 5px;
+  border-radius: 8px;
+  /* margin: 0px 25px 0px 25px; */
+  padding: 5px 25px 25px 25px;
+  align-items: center;
+}
+.mapboxgl-popup-tip{
+  border-top-color: #1e761f!important;
+}
+
+.zoomOutBtn {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+}
+
+.searchBar {
+  position: absolute;
+  top: 10%;
+  left: 1.5%;
+  width: 300px;
+  height: 30px;
+  border-style: solid;
+  border-radius: 5px;
+  border: #343434;
+  border: 3px;
+  resize: none;
+  line-height: 30px;
+  text-indent: 10px;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+}
+.searchBar:focus {
+  outline: none;
+}
+.clearSearchBtn{
+  position: absolute;
+  background-image: url("closeBtnDark.png");
+  background-color: #056006;
+  background-size: cover;
+  border-radius: 50%;
+  border: none;   
+  height:30px;
+  width:30px;   
+  top: 5px;
+  right: 5px;   
+  cursor: pointer;
+}
+.clearSearchBtn:hover{
+  background-color: #044e05;
+}
+
+.resultList {
+  position: absolute;
+  top: 12.25%;
+  left: 1.5%;
+  width: 300px;
+  padding: 0px;
+  background-color: #fff;
+  border-color: #343434;
+  border-radius: 5px;
+  border: 3px;
+  box-shadow: 0px 0px 2px 0px grey inset;
+  list-style-type: none;
+  text-indent: 5px;
+} 
+.resultItem {
+  height: 30px;
+  margin: 5px 0;
+} 
+/*
+.resultItem :hover{
+  background-color: #8b8b8b;
+} */
